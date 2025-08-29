@@ -1,6 +1,10 @@
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as PasswordValidationError
 from rest_framework import serializers
+from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 
@@ -32,6 +36,27 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class LoginTokenSerializer(TokenObtainPairSerializer):
+     @classmethod
+     def get_token(cls, user):
+         token = super().get_token(user)
+         token["role"] = "admin" if (user.is_superuser or user.is_staff) else "user"
+         token["user_id"] = user.id
+         return token
+
+class LoginTokenRefreshSerializer(TokenRefreshSerializer):
+      def validate(self, attrs):
+          data = super().validate(attrs)
+          refresh = RefreshToken(attrs['refresh'])
+          user = User.objects.filter(id=refresh['user_id']).first()
+          if not user:
+              raise InvalidToken("User does not exist.")
+          if getattr(user, 'banned', False) or not user.is_active:
+              raise InvalidToken("User is not allowed to refresh token.")
+          return data
+
+
 
 
 
