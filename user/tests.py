@@ -23,6 +23,11 @@ class RegistrationTest(TestCase):
             "password": "12345"
         }
 
+        self.user_missing_field_data = {
+            "email": "testMissingField@example.com",
+            "password": "PASSWOR09876"
+        }
+
     def test_register_user_success(self):
         response = self.client.post(self.url, self.user_data, content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -43,3 +48,8 @@ class RegistrationTest(TestCase):
         self.assertEqual(response.json()["message"], "Password must be 8+ characters,"
                                                      " not common, not numeric only,"
                                                      " or too similar to personal info.")
+
+    def test_missing_fields(self):
+            response = self.client.post(self.url,  self.user_missing_field_data, content_type='application/json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.json()["message"], "This field is required.")
