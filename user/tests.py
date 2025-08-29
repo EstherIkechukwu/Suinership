@@ -17,6 +17,11 @@ class RegistrationTest(TestCase):
             "email": "testuser@example.com",
             "password": "TestPassword123"
         }
+        self.user_weak_password_data = {
+            "full_name": "Test User",
+            "email": "testWeakPassword@email.com",
+            "password": "12345"
+        }
 
     def test_register_user_success(self):
         response = self.client.post(self.url, self.user_data, content_type='application/json')
@@ -33,4 +38,8 @@ class RegistrationTest(TestCase):
         self.assertTrue(User.objects.filter(email="testuser@example.com").exists())
 
     def test_password_is_weak(self):
-        response = self.client.post(self.url, self.user_data, content_type='application/json')
+        response = self.client.post(self.url, self.user_weak_password_data, content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json()["message"], "Password must be 8+ characters,"
+                                                     " not common, not numeric only,"
+                                                     " or too similar to personal info.")

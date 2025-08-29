@@ -15,5 +15,5 @@ def register_user(request):
     if serializer.is_valid():
         serializer.save()
         return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
-    error_message = serializer.errors.get("email", ["invalid data"])[0]
+    error_message = next(iter(serializer.errors.values()))[0]
     return Response({"message": error_message}, status=status.HTTP_400_BAD_REQUEST)
