@@ -18,6 +18,7 @@ class RegistrationTest(TestCase):
             "password": "TestPassword123"
         }
 
+
     def test_register_user_success(self):
         response = self.client.post(self.url, self.user_data, content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
