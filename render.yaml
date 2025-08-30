@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: Bill-stattion
+    env: docker
+    plan: free
+    docker:
+      dockerfile: Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          name: Bill-stattion-db
+          type: postgres
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: bill-stattion.onrender.com
+    numInstances: 1
+
+databases:
+  - name: Bill-stattion-db
+    plan: free
+    databaseName: billstation
+    user: billstation
