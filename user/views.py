@@ -1,13 +1,16 @@
-from pyexpat.errors import messages
+import uuid
 
-from django.shortcuts import render
+from django.core.cache import cache
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from user.serializer import UserRegisterSerializer, LoginTokenSerializer, LoginTokenRefreshSerializer
+from user.models import User
+from user.serializer import UserRegisterSerializer, LoginTokenSerializer, LoginTokenRefreshSerializer, \
+    PasswordResetTokenSerializer
 
 
 # Create your views here.
@@ -25,3 +28,33 @@ class LoginTokenView(TokenObtainPairView):
 
 class LoginTokenRefreshView(TokenRefreshView):
     serializer_class = LoginTokenRefreshSerializer
+
+@api_view(['POST'])
+def request_password_reset(request):
+    email = request.data.get('email')
+    if not email:
+       return Response({"message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+    user = User.objects.filter(email=email).first()
+    if not user:
+        return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+    token = str(uuid.uuid4())
+    cache.set(f"password_reset:{token}", user.id, timeout=600)
+    return Response({"token": token}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def reset_password(request):
+    serializer = PasswordResetTokenSerializer(data=request.data)
+    if serializer.is_valid():
+       token = serializer.validated_data['token']
+       user_id = cache.get(f"password_reset:{token}")
+       if not user_id:
+           return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+       user = User.objects.get(id=user_id)
+       user.set_password(serializer.validated_data['new_password'])
+       user.save()
+       cache.delete(f"password_reset:{token}")
+       return Response({"message": "Password reset token sent to your email"}, status=status.HTTP_200_OK)
+    error_message = next(iter(serializer.errors.values()))[0]
+    return Response({"message": error_message}, status=status.HTTP_400_BAD_REQUEST)
+
+
