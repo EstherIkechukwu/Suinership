@@ -5,7 +5,8 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -13,10 +14,16 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from user.models import User
 from user.serializer import UserRegisterSerializer, LoginTokenSerializer, LoginTokenRefreshSerializer, \
     PasswordResetTokenSerializer
+from user.swagger_schemas import USER_REGISTER_RESPONSES, RESET_PASSWORD_RESPONSES, RSET_PASSWORD_REQUEST_BODY, \
+    CONFIRM_RESET_PASSWORD_RESPONSES, LOGIN_RESPONSES
 
 
 # Create your views here.
-@swagger_auto_schema(method='post', request_body=UserRegisterSerializer)
+@swagger_auto_schema(
+    method='post',
+    request_body=UserRegisterSerializer,
+    responses=USER_REGISTER_RESPONSES
+)
 @api_view(['POST'])
 def register_user(request):
     serializer = UserRegisterSerializer(data=request.data)
@@ -29,21 +36,27 @@ def register_user(request):
 class LoginTokenView(TokenObtainPairView):
     serializer_class = LoginTokenSerializer
 
+    @swagger_auto_schema(
+        request_body=LoginTokenSerializer,
+        responses=LOGIN_RESPONSES,
+        operation_description="Login with email and password, returns access and refresh tokens"
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
+
 class LoginTokenRefreshView(TokenRefreshView):
     serializer_class = LoginTokenRefreshSerializer
 
+
 @swagger_auto_schema(
     method='post',
-    request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        required=['email'],
-        properties={
-            'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email for password reset'),
-        },
-    ),
-    responses={200: openapi.Response('Password reset token generated')}
+    request_body=RSET_PASSWORD_REQUEST_BODY,
+    responses=RESET_PASSWORD_RESPONSES
 )
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def request_password_reset(request):
     email = request.data.get('email')
     if not email:
@@ -55,8 +68,15 @@ def request_password_reset(request):
     cache.set(f"password_reset:{token}", user.id, timeout=600)
     return Response({"token": token}, status=status.HTTP_200_OK)
 
-@swagger_auto_schema(method='post', request_body=PasswordResetTokenSerializer)
+
+
+@swagger_auto_schema(
+    method='post',
+    request_body=PasswordResetTokenSerializer,
+    responses=CONFIRM_RESET_PASSWORD_RESPONSES
+)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def reset_password(request):
     serializer = PasswordResetTokenSerializer(data=request.data)
     if serializer.is_valid():
