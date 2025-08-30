@@ -13,6 +13,7 @@ class UserLoginTests(APITestCase):
             password="StrongPassword123"
         )
         self.login_url = reverse('login')
+        self.refresh_url = reverse('login_token_refresh')
 
     def test_login_with_correct_credentials(self):
         data = {
@@ -23,3 +24,15 @@ class UserLoginTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)
+
+        refresh_token = response.data['refresh']
+        refresh_response = self.client.post(self.refresh_url, {'refresh': refresh_token}, format='json')
+        self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', refresh_response.data)
+
+    def test_login_with_invalid_email(self):
+        data = {"email": "wrong@example.com", "password": "StrongPassword123"}
+        response = self.client.post(self.login_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+

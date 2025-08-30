@@ -58,6 +58,18 @@ class LoginTokenRefreshSerializer(TokenRefreshSerializer):
               raise InvalidToken("User is not allowed to refresh token.")
           return data
 
+class PasswordResetTokenSerializer(serializers.Serializer):
+     token = serializers.CharField(required=True)
+     new_password = serializers.CharField(required=True)
+
+     def validate_new_password(self, value):
+         try:
+             validate_password(value)
+         except PasswordValidationError as e:
+             raise serializers.ValidationError(str(e))
+         return value
+
+
 
 
 
