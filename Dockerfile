@@ -23,4 +23,7 @@ COPY . /app/
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "service.wsgi:application"]
+COPY start.sh /app/
+RUN chmod +x /app/start.sh
+
+CMD ["/app/start.sh"]

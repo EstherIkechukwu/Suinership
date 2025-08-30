@@ -13,6 +13,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True, validators=[])
     password = serializers.CharField(write_only=True,  required=True,)
 
+
     class Meta:
         model = User
         fields = ( 'full_name', 'email', 'password')
