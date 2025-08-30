@@ -56,7 +56,6 @@ class LoginTokenRefreshView(TokenRefreshView):
     responses=RESET_PASSWORD_RESPONSES
 )
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def request_password_reset(request):
     email = request.data.get('email')
     if not email:
@@ -76,7 +75,6 @@ def request_password_reset(request):
     responses=CONFIRM_RESET_PASSWORD_RESPONSES
 )
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def reset_password(request):
     serializer = PasswordResetTokenSerializer(data=request.data)
     if serializer.is_valid():
@@ -88,7 +86,7 @@ def reset_password(request):
        user.set_password(serializer.validated_data['new_password'])
        user.save()
        cache.delete(f"password_reset:{token}")
-       return Response({"message": "Password reset token sent to your email"}, status=status.HTTP_200_OK)
+       return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
     error_message = next(iter(serializer.errors.values()))[0]
     return Response({"message": error_message}, status=status.HTTP_400_BAD_REQUEST)
 
