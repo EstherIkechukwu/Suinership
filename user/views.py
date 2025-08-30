@@ -1,6 +1,8 @@
 import uuid
 
 from django.core.cache import cache
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -14,6 +16,7 @@ from user.serializer import UserRegisterSerializer, LoginTokenSerializer, LoginT
 
 
 # Create your views here.
+@swagger_auto_schema(method='post', request_body=UserRegisterSerializer)
 @api_view(['POST'])
 def register_user(request):
     serializer = UserRegisterSerializer(data=request.data)
@@ -29,6 +32,17 @@ class LoginTokenView(TokenObtainPairView):
 class LoginTokenRefreshView(TokenRefreshView):
     serializer_class = LoginTokenRefreshSerializer
 
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['email'],
+        properties={
+            'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email for password reset'),
+        },
+    ),
+    responses={200: openapi.Response('Password reset token generated')}
+)
 @api_view(['POST'])
 def request_password_reset(request):
     email = request.data.get('email')
@@ -41,6 +55,7 @@ def request_password_reset(request):
     cache.set(f"password_reset:{token}", user.id, timeout=600)
     return Response({"token": token}, status=status.HTTP_200_OK)
 
+@swagger_auto_schema(method='post', request_body=PasswordResetTokenSerializer)
 @api_view(['POST'])
 def reset_password(request):
     serializer = PasswordResetTokenSerializer(data=request.data)
