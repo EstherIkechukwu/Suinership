@@ -93,17 +93,46 @@ python manage.py migrate
 python manage.py runserver
 
 
-
-Docker Setup
+## Docker Setup
 
 ```bash
-
-
 Build and run the project with Docker:
+
 docker-compose build
 docker-compose up
+
 
 Run migrations inside Docker:
 
 ```bash
 docker-compose exec web python manage.py migrate
+
+
+Collect static files:
+
+```bash
+docker-compose exec web python manage.py collectstatic --noinput
+
+## Notes
+Use .env.local for local development
+Use .env for production deployment
+Swagger UI and Redoc should be available at:
+/swagger/
+/redoc/
+
+##  Caching & Redis Behavior
+
+When running **Django with `python manage.py runserver` locally**, caching with Redis may not work.  
+This happens because:
+
+- `REDIS_HOST=127.0.0.1` works only when Redis is installed directly on your machine.  
+- In most setups, Redis is running inside **Docker**, so Django (running outside Docker) cannot reach it at `127.0.0.1`.  
+- Inside Docker Compose, services talk to each other by their **service name** (e.g., `redis`), not `localhost`.  
+
+  **Solution:**  
+- If using **Docker**, set `REDIS_HOST=redis` in `.env.local` → Django connects correctly inside the container.  
+- If using **runserver locally**, either:  
+  - Install Redis on your host machine and keep `REDIS_HOST=127.0.0.1`, **or**  
+  - Use Docker for both Django + Redis (recommended).  
+
+---
