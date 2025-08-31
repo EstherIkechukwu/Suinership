@@ -72,7 +72,7 @@ REDIS_PASSWORD=<your-local-redis-password>
 Clone the repository and set up the environment:
 
 ```bash
-git clone <repo-url>
+git clone <https://github.com/Lawbod3/Bill-stattion.git>
 cd Bill-station
 python -m venv .venv
 source .venv/bin/activate   # On Windows use .venv\Scripts\activate
