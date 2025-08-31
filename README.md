@@ -55,18 +55,7 @@ DB_PORT=5432
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
 REDIS_PASSWORD=<your-local-redis-password>
-Local (.env)
-DEBUG=False
-SECRET_KEY=<your-production-secret-key>
-ALLOWED_HOSTS=localhost,127.0.0.1,<your-domain>
-DB_NAME=<your-db-name>
-DB_USER=<your-db-user>
-DB_PASSWORD=<your-db-password>
-DB_HOST=<your-db-host>
-DB_PORT=5432
-REDIS_HOST=<your-redis-host>
-REDIS_PORT=6379
-REDIS_PASSWORD=<your-redis-password>
+
 
 ### Local Development (`.env.local`)
 
@@ -112,6 +101,53 @@ Collect static files:
 
 ```bash
 docker-compose exec web python manage.py collectstatic --noinput
+
+## Example docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: billStation_db
+      POSTGRES_USER: your_db_user
+      POSTGRES_PASSWORD: your_db_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    command: redis-server --requirepass your_redis_password
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=billStation_db
+      - DB_USER=your_db_user
+      - DB_PASSWORD=your_db_password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=your_redis_password
+      - SECRET_KEY=your_django_secret_key
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
+
 
 ## Notes
 Use .env.local for local development
