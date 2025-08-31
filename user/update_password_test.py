@@ -22,8 +22,8 @@ class UpdatePasswordTests(TestCase):
         response = self.client.post(self.password_reset_request_url, {"email": self.user.email}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        token_key = cache.keys("password_reset:*")[0]
-        token = token_key.split(":")[1]
+        token = response.data.get("token")
+        token_key = f"password_reset:{token}"
         user_id = cache.get(f"password_reset:{token}")
         self.assertIsNotNone(user_id, self.user.id)
 
