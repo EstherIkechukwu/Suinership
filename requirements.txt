@@ -11,3 +11,4 @@ asgiref==3.9.1
 dj-database-url==2.1.0
 gunicorn==21.2.0
 whitenoise==6.7.0
+django-ratelimit==3.0.0

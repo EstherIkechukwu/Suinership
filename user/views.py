@@ -3,6 +3,7 @@ import uuid
 from django.core.cache import cache
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from ratelimit.decorators import ratelimit
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -55,8 +56,14 @@ class LoginTokenRefreshView(TokenRefreshView):
     request_body=RSET_PASSWORD_REQUEST_BODY,
     responses=RESET_PASSWORD_RESPONSES
 )
+@ratelimit(key='ip', rate='5/15m')
 @api_view(['POST'])
 def request_password_reset(request):
+    if getattr(request, 'limited', False):
+        return Response(
+            {"message": "Too many reset attempts. Please try again later."},
+            status=status.HTTP_429_TOO_MANY_REQUESTS
+        )
     email = request.data.get('email')
     if not email:
        return Response({"message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -74,6 +81,7 @@ def request_password_reset(request):
     request_body=PasswordResetTokenSerializer,
     responses=CONFIRM_RESET_PASSWORD_RESPONSES
 )
+
 @api_view(['POST'])
 def reset_password(request):
     serializer = PasswordResetTokenSerializer(data=request.data)
