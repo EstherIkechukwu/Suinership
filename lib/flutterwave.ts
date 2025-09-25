@@ -49,8 +49,7 @@ export class FlutterwaveService {
   private publicKey: string
 
   private constructor() {
-    // In production, this would come from environment variables
-    this.publicKey = process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || "FLWPUBK_TEST-mock-key"
+    this.publicKey = "FLWPUBK_TEST-simulated-key-for-demo"
   }
 
   public static getInstance(): FlutterwaveService {

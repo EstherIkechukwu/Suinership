@@ -7,6 +7,7 @@ const AuthContext = createContext<
   AuthState & {
     signIn: (role?: "buyer" | "seller") => Promise<void>
     signInAdmin: (credentials: { email: string; password: string }) => Promise<void>
+    signInWithZkLogin: (email: string, role: "buyer" | "seller") => Promise<void> // Added zkLogin method
     signOut: () => Promise<void>
   }
 >({
@@ -15,6 +16,7 @@ const AuthContext = createContext<
   isAuthenticated: false,
   signIn: async () => {},
   signInAdmin: async () => {},
+  signInWithZkLogin: async () => {}, // Added to context
   signOut: async () => {},
 })
 
@@ -57,6 +59,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const signInWithZkLogin = async (email: string, role: "buyer" | "seller") => {
+    setIsLoading(true)
+    try {
+      const user = await authService.signInWithZkLogin(email, role)
+      setUser(user)
+    } catch (error) {
+      console.error("zkLogin sign in failed:", error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const signOut = async () => {
     setIsLoading(true)
     try {
@@ -77,6 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         signIn,
         signInAdmin,
+        signInWithZkLogin, // Added to context
         signOut,
       }}
     >

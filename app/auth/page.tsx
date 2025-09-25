@@ -1,35 +1,72 @@
 "use client"
-
-import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Checkbox } from "@/components/ui/checkbox"
 import { LanguageSelector } from "@/components/ui/language-selector"
 import { AccessibilityToolbar } from "@/components/ui/accessibility-toolbar"
 import { useAuth } from "@/components/auth/auth-provider"
-import { Home, Users, Building, Shield, Scale, Briefcase, ArrowLeft } from "lucide-react"
+import { Home, Users, Building, Shield, ArrowLeft, Copy, Check, Chrome, Wallet } from "lucide-react"
 import { type Language, getTranslation } from "@/lib/i18n"
 import Link from "next/link"
 
+type AuthStep = "role-selection" | "sign-up" | "sign-in" | "wallet-display"
+type UserRole = "buyer" | "seller"
+
 export default function AuthPage() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en")
+  const [currentStep, setCurrentStep] = useState<AuthStep>("role-selection")
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null)
+  const [email, setEmail] = useState("")
+  const [agreeToTerms, setAgreeToTerms] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [adminCredentials, setAdminCredentials] = useState({ email: "", password: "" })
-  const { signIn, signInAdmin } = useAuth()
+  const [walletAddress, setWalletAddress] = useState("")
+  const [copied, setCopied] = useState(false)
+  const [isSignUp, setIsSignUp] = useState(true)
+  const { signInWithZkLogin } = useAuth()
   const router = useRouter()
 
   const t = (key: string) => getTranslation(key, currentLanguage)
 
-  const handleRoleSignIn = async (role: "buyer" | "seller") => {
+  const handleRoleSelection = (role: UserRole) => {
+    setSelectedRole(role)
+    setCurrentStep("sign-up")
+  }
+
+  const handleZkLoginSignUp = async () => {
+    if (!email || !agreeToTerms || !selectedRole) return
+
     setIsLoading(true)
     try {
-      await signIn(role)
-      router.push(role === "buyer" ? "/dashboard/buyer" : "/dashboard/seller")
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      // Generate wallet address
+      const generatedWallet = `0x${Math.random().toString(16).substr(2, 40)}`
+      setWalletAddress(generatedWallet)
+
+      setCurrentStep("wallet-display")
+    } catch (error) {
+      console.error("Sign up failed:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleZkLoginSignIn = async () => {
+    if (!email) return
+
+    setIsLoading(true)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // Simulate role detection from existing account
+      const detectedRole = Math.random() > 0.5 ? "buyer" : "seller"
+      await signInWithZkLogin(email, detectedRole)
+
+      router.push(`/dashboard/${detectedRole}`)
     } catch (error) {
       console.error("Sign in failed:", error)
     } finally {
@@ -37,17 +74,48 @@ export default function AuthPage() {
     }
   }
 
-  const handleAdminSignIn = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleProceedToDashboard = async () => {
+    if (!selectedRole || !email) return
+
     setIsLoading(true)
     try {
-      await signInAdmin(adminCredentials)
-      router.push("/dashboard/admin")
+      await signInWithZkLogin(email, selectedRole)
+      router.push(`/dashboard/${selectedRole}`)
     } catch (error) {
-      console.error("Admin sign in failed:", error)
+      console.error("Dashboard navigation failed:", error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const copyWalletAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(walletAddress)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error("Failed to copy:", error)
+    }
+  }
+
+  const formatWalletAddress = (address: string) => {
+    if (!address) return ""
+    return `${address.slice(0, 6)}...${address.slice(-4)}`
+  }
+
+  const switchToSignIn = () => {
+    setIsSignUp(false)
+    setCurrentStep("sign-in")
+    setEmail("")
+    setAgreeToTerms(false)
+  }
+
+  const switchToSignUp = () => {
+    setIsSignUp(true)
+    setCurrentStep("role-selection")
+    setSelectedRole(null)
+    setEmail("")
+    setAgreeToTerms(false)
   }
 
   const roleCards = [
@@ -88,7 +156,7 @@ export default function AuthPage() {
       </header>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
@@ -96,107 +164,225 @@ export default function AuthPage() {
               </div>
               <span className="text-2xl font-bold text-foreground">Suinership</span>
             </div>
-            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">Welcome to Suinership</h1>
-            <p className="text-xl text-muted-foreground">Choose your role to get started with fractional real estate</p>
+            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+              {currentStep === "role-selection"
+                ? "Choose Your Role"
+                : currentStep === "sign-up"
+                  ? "Create Your Account"
+                  : currentStep === "sign-in"
+                    ? "Welcome Back"
+                    : "Your Wallet is Ready"}
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              {currentStep === "role-selection"
+                ? "Select how you want to use Suinership"
+                : currentStep === "sign-up"
+                  ? "Sign up to start your real estate investment journey"
+                  : currentStep === "sign-in"
+                    ? "Sign in to access your dashboard"
+                    : "Your Sui wallet has been created successfully"}
+            </p>
           </div>
 
-          <Tabs defaultValue="user" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="user">User Access</TabsTrigger>
-              <TabsTrigger value="admin">Admin Access</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="user" className="space-y-8">
-              <div className="grid md:grid-cols-2 gap-6">
+          {/* Role Selection Step */}
+          {currentStep === "role-selection" && (
+            <div className="space-y-6">
+              <div className="grid gap-6">
                 {roleCards.map((roleCard) => (
-                  <Card key={roleCard.role} className="bg-card border-border hover:shadow-lg transition-all">
-                    <CardHeader className="text-center">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <roleCard.icon className="h-8 w-8 text-primary" />
+                  <Card
+                    key={roleCard.role}
+                    className="bg-card border-border hover:shadow-lg transition-all cursor-pointer"
+                    onClick={() => handleRoleSelection(roleCard.role)}
+                  >
+                    <CardHeader className="flex flex-row items-center space-y-0 space-x-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <roleCard.icon className="h-6 w-6 text-primary" />
                       </div>
-                      <CardTitle className="text-xl">{roleCard.title}</CardTitle>
-                      <CardDescription className="text-muted-foreground">{roleCard.description}</CardDescription>
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{roleCard.title}</CardTitle>
+                        <CardDescription>{roleCard.description}</CardDescription>
+                      </div>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                      <ul className="space-y-2">
+                    <CardContent>
+                      <ul className="grid grid-cols-2 gap-2">
                         {roleCard.features.map((feature, index) => (
                           <li key={index} className="flex items-center text-sm text-muted-foreground">
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full mr-3" />
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2" />
                             {feature}
                           </li>
                         ))}
                       </ul>
-                      <Button className="w-full" onClick={() => handleRoleSignIn(roleCard.role)} disabled={isLoading}>
-                        {isLoading ? "Signing in..." : `Continue as ${roleCard.title}`}
-                      </Button>
                     </CardContent>
                   </Card>
                 ))}
               </div>
 
-              <Card className="bg-muted/30 border-border">
-                <CardContent className="p-6">
-                  <div className="text-center space-y-4">
-                    <h3 className="text-lg font-semibold text-foreground">Professional Access</h3>
-                    <p className="text-muted-foreground">
-                      Are you a law firm or custodian partner? Contact our admin team for professional access.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                        <Scale className="h-4 w-4" />
-                        <span>Law Firm Verification</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                        <Briefcase className="h-4 w-4" />
-                        <span>Custodian Management</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-2">Already have an account?</p>
+                <Button variant="outline" onClick={switchToSignIn}>
+                  Sign In Instead
+                </Button>
+              </div>
+            </div>
+          )}
 
-            <TabsContent value="admin">
-              <Card className="max-w-md mx-auto">
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Shield className="h-8 w-8 text-destructive" />
-                  </div>
-                  <CardTitle>Admin Sign In</CardTitle>
-                  <CardDescription>Restricted access for super administrators only</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleAdminSignIn} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="admin-email">Email</Label>
-                      <Input
-                        id="admin-email"
-                        type="email"
-                        placeholder="admin@suinership.com"
-                        value={adminCredentials.email}
-                        onChange={(e) => setAdminCredentials({ ...adminCredentials, email: e.target.value })}
-                        required
-                      />
+          {/* Sign Up Step */}
+          {currentStep === "sign-up" && selectedRole && (
+            <Card className="bg-card border-border">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  {selectedRole === "buyer" ? (
+                    <Users className="h-8 w-8 text-primary" />
+                  ) : (
+                    <Building className="h-8 w-8 text-primary" />
+                  )}
+                </div>
+                <CardTitle>
+                  Sign Up as {selectedRole === "buyer" ? "Investor/Buyer" : "Property Owner/Seller"}
+                </CardTitle>
+                <CardDescription>Enter your details to create your account</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="terms"
+                    checked={agreeToTerms}
+                    onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
+                  />
+                  <Label htmlFor="terms" className="text-sm">
+                    I agree to the{" "}
+                    <Link href="/terms" className="text-primary hover:underline">
+                      Terms and Conditions
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy" className="text-primary hover:underline">
+                      Privacy Policy
+                    </Link>
+                  </Label>
+                </div>
+
+                <Button
+                  className="w-full"
+                  onClick={handleZkLoginSignUp}
+                  disabled={!email || !agreeToTerms || isLoading}
+                >
+                  <Chrome className="h-4 w-4 mr-2" />
+                  {isLoading ? "Creating Account..." : "Sign Up with Google (zkLogin)"}
+                </Button>
+
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground mb-2">Already have an account?</p>
+                  <Button variant="ghost" onClick={switchToSignIn}>
+                    Sign In Instead
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Sign In Step */}
+          {currentStep === "sign-in" && (
+            <Card className="bg-card border-border">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="h-8 w-8 text-primary" />
+                </div>
+                <CardTitle>Sign In to Your Account</CardTitle>
+                <CardDescription>Enter your email to access your dashboard</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="signin-email">Email Address</Label>
+                  <Input
+                    id="signin-email"
+                    type="email"
+                    placeholder="Enter your registered email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <Button className="w-full" onClick={handleZkLoginSignIn} disabled={!email || isLoading}>
+                  <Chrome className="h-4 w-4 mr-2" />
+                  {isLoading ? "Signing In..." : "Sign In with Google (zkLogin)"}
+                </Button>
+
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground mb-2">Don't have an account?</p>
+                  <Button variant="ghost" onClick={switchToSignUp}>
+                    Sign Up Instead
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Wallet Display Step */}
+          {currentStep === "wallet-display" && (
+            <Card className="bg-card border-border">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Wallet className="h-8 w-8 text-green-500" />
+                </div>
+                <CardTitle>Wallet Created Successfully!</CardTitle>
+                <CardDescription>Your Sui wallet has been generated and is ready to use</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                  <Label className="text-sm font-medium">Your Wallet Address</Label>
+                  <div className="flex items-center justify-between bg-background rounded-md p-3 border">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                        <Wallet className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-mono text-sm">{formatWalletAddress(walletAddress)}</p>
+                        <p className="text-xs text-muted-foreground">Sui Network</p>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="admin-password">Password</Label>
-                      <Input
-                        id="admin-password"
-                        type="password"
-                        placeholder="Enter admin password"
-                        value={adminCredentials.password}
-                        onChange={(e) => setAdminCredentials({ ...adminCredentials, password: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? "Signing in..." : "Sign In as Admin"}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={copyWalletAddress}
+                      className="flex items-center space-x-1 bg-transparent"
+                    >
+                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      <span>{copied ? "Copied!" : "Copy"}</span>
                     </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Keep this address safe. You'll use it to receive USDC and manage your investments.
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4">
+                  <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">What's Next?</h4>
+                  <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                    <li>• Your wallet is automatically connected to your account</li>
+                    <li>• Deposit Naira to get USDC for property investments</li>
+                    <li>• Start exploring available properties on your dashboard</li>
+                  </ul>
+                </div>
+
+                <Button className="w-full" onClick={handleProceedToDashboard} disabled={isLoading}>
+                  {isLoading ? "Loading Dashboard..." : "Proceed to Dashboard"}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

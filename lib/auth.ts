@@ -113,4 +113,30 @@ export class AuthService {
       localStorage.setItem("suinership_user", JSON.stringify(this.currentUser))
     }
   }
+
+  async signInWithZkLogin(email: string, role: UserRole): Promise<User> {
+    // Simulate zkLogin authentication flow
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+
+    const mockUser: User = {
+      id: `zklogin_${Date.now()}`,
+      email,
+      name: email
+        .split("@")[0]
+        .replace(/[^a-zA-Z]/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase()),
+      role,
+      walletAddress: `0x${Math.random().toString(16).substr(2, 40)}`,
+      profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
+      createdAt: new Date(),
+      lastLoginAt: new Date(),
+      isVerified: true,
+      kycStatus: role === "seller" ? "pending" : undefined,
+      language: "en",
+    }
+
+    this.currentUser = mockUser
+    localStorage.setItem("suinership_user", JSON.stringify(mockUser))
+    return mockUser
+  }
 }
