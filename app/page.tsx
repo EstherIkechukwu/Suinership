@@ -119,7 +119,7 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight text-balance text-center">
+                <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight text-balance text-left">
                   {t("landing.hero.title")}
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed text-pretty">

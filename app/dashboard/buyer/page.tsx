@@ -10,10 +10,15 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { AIChatbot } from "@/components/ui/ai-chatbot"
+import { InvestmentModal } from "@/components/ui/investment-modal" // Added investment modal import
 import { Home, TrendingUp, DollarSign, PieChart, ArrowUpRight, MapPin, Users, Eye } from "lucide-react"
 
 export default function BuyerDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
+  const [selectedProperty, setSelectedProperty] = useState<any>(null)
+  const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false)
+
+  const walletBalance = 15750.5
 
   // Mock data - in production this would come from API
   const portfolioData = {
@@ -107,11 +112,18 @@ export default function BuyerDashboard() {
   ]
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-NG", {
-      style: "currency",
-      currency: "NGN",
-      minimumFractionDigits: 0,
-    }).format(amount)
+    return `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC` // Updated to show USDC instead of NGN
+  }
+
+  const handleInvestClick = (property: any) => {
+    setSelectedProperty(property)
+    setIsInvestmentModalOpen(true)
+  }
+
+  const handleInvestmentSuccess = (investmentAmount: number) => {
+    // In production, this would update the user's portfolio and wallet balance
+    console.log(`Investment of ${investmentAmount} USDC successful`)
+    // Refresh data or show success message
   }
 
   return (
@@ -294,7 +306,9 @@ export default function BuyerDashboard() {
                           <div className="text-sm text-muted-foreground">
                             <span className="font-medium">Suggested Use:</span> {property.suggestedUse}
                           </div>
-                          <Button className="w-full">Invest Now</Button>
+                          <Button className="w-full" onClick={() => handleInvestClick(property)}>
+                            Invest Now
+                          </Button>
                         </CardContent>
                       </Card>
                     ))}
@@ -422,6 +436,14 @@ export default function BuyerDashboard() {
 
         {/* AI Chatbot */}
         <AIChatbot userRole="buyer" />
+
+        <InvestmentModal
+          isOpen={isInvestmentModalOpen}
+          onClose={() => setIsInvestmentModalOpen(false)}
+          property={selectedProperty}
+          walletBalance={walletBalance}
+          onSuccess={handleInvestmentSuccess}
+        />
       </DashboardLayout>
     </ProtectedRoute>
   )

@@ -21,6 +21,8 @@ import {
   Briefcase,
   Menu,
   X,
+  Wallet,
+  ImageIcon,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -42,6 +44,8 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
       { name: "Dashboard", href: "/dashboard/buyer", icon: Home },
       { name: "Portfolio", href: "/dashboard/buyer/portfolio", icon: PieChart },
       { name: "Marketplace", href: "/dashboard/buyer/marketplace", icon: ShoppingCart },
+      { name: "Wallet", href: "/dashboard/buyer/wallet", icon: Wallet }, // Added Wallet page
+      { name: "NFT Collection", href: "/dashboard/buyer/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
       { name: "Next of Kin", href: "/dashboard/buyer/next-of-kin", icon: Users },
       { name: "Settings", href: "/dashboard/buyer/settings", icon: Settings },
     ],
@@ -50,6 +54,8 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
       { name: "My Properties", href: "/dashboard/seller/properties", icon: Building },
       { name: "List Property", href: "/dashboard/seller/list", icon: ShoppingCart },
       { name: "Analytics", href: "/dashboard/seller/analytics", icon: PieChart },
+      { name: "Wallet", href: "/dashboard/seller/wallet", icon: Wallet }, // Added Wallet page
+      { name: "NFT Collection", href: "/dashboard/seller/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
       { name: "Settings", href: "/dashboard/seller/settings", icon: Settings },
     ],
     admin: [
@@ -57,12 +63,16 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
       { name: "Law Firms", href: "/dashboard/admin/law-firms", icon: Scale },
       { name: "Custodians", href: "/dashboard/admin/custodians", icon: Briefcase },
       { name: "Oversight", href: "/dashboard/admin/oversight", icon: Shield },
+      { name: "Wallet", href: "/dashboard/admin/wallet", icon: Wallet }, // Added Wallet page
+      { name: "NFT Collection", href: "/dashboard/admin/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
       { name: "Settings", href: "/dashboard/admin/settings", icon: Settings },
     ],
     "law-firm": [
       { name: "Dashboard", href: "/dashboard/law-firm", icon: Home },
       { name: "Verification Queue", href: "/dashboard/law-firm/queue", icon: Scale },
       { name: "Certificates", href: "/dashboard/law-firm/certificates", icon: Shield },
+      { name: "Wallet", href: "/dashboard/law-firm/wallet", icon: Wallet }, // Added Wallet page
+      { name: "NFT Collection", href: "/dashboard/law-firm/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
       { name: "Settings", href: "/dashboard/law-firm/settings", icon: Settings },
     ],
     custodian: [
@@ -70,6 +80,8 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
       { name: "Properties", href: "/dashboard/custodian/properties", icon: Building },
       { name: "Analytics", href: "/dashboard/custodian/analytics", icon: PieChart },
       { name: "Reports", href: "/dashboard/custodian/reports", icon: Shield },
+      { name: "Wallet", href: "/dashboard/custodian/wallet", icon: Wallet }, // Added Wallet page
+      { name: "NFT Collection", href: "/dashboard/custodian/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
       { name: "Settings", href: "/dashboard/custodian/settings", icon: Settings },
     ],
   }
