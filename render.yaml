@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: Suinership-backend
+    name: Suinership
     env: docker
     plan: free
     docker:
@@ -16,11 +16,11 @@ services:
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
-        value: suinership-backend.onrender.com
+        value: suinership.onrender.com
     numInstances: 1
 
 databases:
   - name: Suinership_db
     plan: free
     databaseName: suinership
-    user: Suinership
+    user: suinership_user
