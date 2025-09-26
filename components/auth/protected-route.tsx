@@ -25,7 +25,6 @@ export function ProtectedRoute({ children, allowedRoles, redirectTo = "/auth" }:
       }
 
       if (allowedRoles && !allowedRoles.includes(user.role)) {
-        // Redirect to appropriate dashboard based on user role
         const dashboardRoutes = {
           buyer: "/dashboard/buyer",
           seller: "/dashboard/seller",

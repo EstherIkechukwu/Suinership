@@ -4,8 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Suinership dark navy theme with professional color palette */
-  --background: #0a0e17;
+   --background: #0a0e17;
   --foreground: #ffffff;
   --card: #1a1f2e;
   --card-foreground: #ffffff;
@@ -149,7 +148,6 @@
   }
 }
 
-/* Enhanced accessibility styles with better contrast and motion controls */
 .high-contrast {
   --background: #000000;
   --foreground: #ffffff;
@@ -185,7 +183,6 @@
   box-shadow: none !important;
 }
 
-/* Add enhanced focus indicators for better keyboard navigation */
 .enhanced-focus *:focus {
   outline: 3px solid var(--primary) !important;
   outline-offset: 2px !important;
@@ -221,7 +218,6 @@
   top: 6px;
 }
 
-/* Language direction support */
 [dir="rtl"] {
   direction: rtl;
 }
@@ -230,7 +226,6 @@
   direction: ltr;
 }
 
-/* Add print styles for better document printing */
 @media print {
   .no-print {
     display: none !important;
@@ -247,7 +242,6 @@
   }
 }
 
-/* Add better mobile touch targets */
 @media (max-width: 768px) {
   button,
   [role="button"],

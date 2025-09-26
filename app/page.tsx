@@ -12,6 +12,7 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { ArrowRight, Home, TrendingUp, Users, MapPin, DollarSign } from "lucide-react"
 import { type Language, getTranslation } from "@/lib/i18n"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function LandingPage() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en")
@@ -72,18 +73,22 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation Header */}
+
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Home className="h-5 w-5 text-primary-foreground" />
+                <div className=" flex items-center justify-center">
+                   <Image
+                        src="/Suinership_logo_white.png"
+                        alt="Suinership"
+                        width={100}
+                        height={100}
+                    />
                 </div>
-                <span className="text-xl font-bold text-foreground">Suinership</span>
-              </div>
-              <nav className="hidden md:flex items-center space-x-6">
+                </div>
+              <nav className="hidden md:flex items-center space-x-6 ml-115">
                 <Link href="#validator" className="text-muted-foreground hover:text-foreground transition-colors">
                   {t("nav.validator")}
                 </Link>
@@ -113,7 +118,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
+
       <section className="relative py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -176,7 +181,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Property Showcase Section */}
+
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -228,7 +233,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
+
       <section className="py-20 bg-card/30">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 text-center">
@@ -252,7 +257,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+
       <section className="py-20 bg-gradient-to-r from-primary/10 to-accent/10">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-8">
@@ -275,19 +280,24 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* AI Chatbot */}
+
       <AIChatbot userRole="buyer" language={currentLanguage} />
 
-      {/* Footer */}
+
       <footer className="border-t border-border bg-card/50">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Home className="h-5 w-5 text-primary-foreground" />
+                <div className="flex items-center justify-center">
+                    <Image
+                        src="/Suinership_logo_white.png"
+                        alt="Suinership"
+                        width={100}
+                        height={100}
+                        className="rounded-lg"
+                    />
                 </div>
-                <span className="text-xl font-bold text-foreground">Suinership</span>
               </div>
               <p className="text-muted-foreground">
                 Democratizing real estate investment through blockchain technology

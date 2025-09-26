@@ -16,7 +16,7 @@ export default function SellerNFTCollectionPage() {
   const [sortBy, setSortBy] = useState("newest")
   const [filterBy, setFilterBy] = useState("all")
 
-  // Mock NFT data for seller's properties
+
   const nftCollection = [
     {
       id: 1,
@@ -90,7 +90,7 @@ export default function SellerNFTCollectionPage() {
   ]
 
   const formatCurrency = (amount: number) => {
-    return `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC`
+    return `${amount.toLocaleString("en-US", { minimumFractionDigits:0})} USDC`
   }
 
   const getStatusBadge = (status: string) => {
@@ -155,7 +155,7 @@ export default function SellerNFTCollectionPage() {
     <ProtectedRoute allowedRoles={["seller"]}>
       <DashboardLayout userRole="seller">
         <div className="space-y-8">
-          {/* Collection Overview */}
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -163,7 +163,7 @@ export default function SellerNFTCollectionPage() {
                 <ImageIcon className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{totalProperties}</div>
+                <div className="text-1.8xl font-bold">{totalProperties}</div>
                 <p className="text-xs text-muted-foreground">Listed properties</p>
               </CardContent>
             </Card>
@@ -174,7 +174,7 @@ export default function SellerNFTCollectionPage() {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(totalValue)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(totalValue)}</div>
                 <p className="text-xs text-muted-foreground">Combined property value</p>
               </CardContent>
             </Card>
@@ -185,7 +185,7 @@ export default function SellerNFTCollectionPage() {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(totalSoldValue)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(totalSoldValue)}</div>
                 <p className="text-xs text-muted-foreground">Revenue generated</p>
               </CardContent>
             </Card>
@@ -196,13 +196,13 @@ export default function SellerNFTCollectionPage() {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{totalInvestors}</div>
+                <div className="text-1.8xl font-bold">{totalInvestors}</div>
                 <p className="text-xs text-muted-foreground">Across all properties</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Search and Filter */}
+
           <Card>
             <CardHeader>
               <CardTitle>Property NFT Collection</CardTitle>

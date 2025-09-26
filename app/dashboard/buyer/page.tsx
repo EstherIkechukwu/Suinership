@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { AIChatbot } from "@/components/ui/ai-chatbot"
-import { InvestmentModal } from "@/components/ui/investment-modal" // Added investment modal import
+import { InvestmentModal } from "@/components/ui/investment-modal"
 import { Home, TrendingUp, DollarSign, PieChart, ArrowUpRight, MapPin, Users, Eye } from "lucide-react"
 
 export default function BuyerDashboard() {
@@ -18,9 +18,9 @@ export default function BuyerDashboard() {
   const [selectedProperty, setSelectedProperty] = useState<any>(null)
   const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false)
 
-  const walletBalance = 15750.5
+  const walletBalance = 15750
 
-  // Mock data - in production this would come from API
+
   const portfolioData = {
     totalValue: 2450000,
     totalInvested: 2000000,
@@ -112,7 +112,7 @@ export default function BuyerDashboard() {
   ]
 
   const formatCurrency = (amount: number) => {
-    return `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC` // Updated to show USDC instead of NGN
+      return `${amount.toLocaleString("en-US", {minimumFractionDigits: 0})} USDC`
   }
 
   const handleInvestClick = (property: any) => {
@@ -121,16 +121,13 @@ export default function BuyerDashboard() {
   }
 
   const handleInvestmentSuccess = (investmentAmount: number) => {
-    // In production, this would update the user's portfolio and wallet balance
     console.log(`Investment of ${investmentAmount} USDC successful`)
-    // Refresh data or show success message
   }
 
   return (
     <ProtectedRoute allowedRoles={["buyer"]}>
       <DashboardLayout userRole="buyer">
         <div className="space-y-8">
-          {/* Portfolio Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -138,7 +135,7 @@ export default function BuyerDashboard() {
                 <PieChart className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(portfolioData.totalValue)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(portfolioData.totalValue)}</div>
                 <p className="text-xs text-muted-foreground">
                   <span className="text-accent flex items-center">
                     <ArrowUpRight className="h-3 w-3 mr-1" />+{portfolioData.returnPercentage}%
@@ -153,7 +150,7 @@ export default function BuyerDashboard() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(portfolioData.totalInvested)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(portfolioData.totalInvested)}</div>
                 <p className="text-xs text-muted-foreground">Across {portfolioData.propertiesOwned} properties</p>
               </CardContent>
             </Card>
@@ -164,7 +161,7 @@ export default function BuyerDashboard() {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(portfolioData.monthlyDividends)}</div>
+                <div className="text-1.5xl font-bold">{formatCurrency(portfolioData.monthlyDividends)}</div>
                 <p className="text-xs text-muted-foreground">
                   <span className="text-accent">+12% from last month</span>
                 </p>
@@ -177,13 +174,13 @@ export default function BuyerDashboard() {
                 <Home className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{portfolioData.propertiesOwned}</div>
+                <div className="text-1.8xl font-bold">{portfolioData.propertiesOwned}</div>
                 <p className="text-xs text-muted-foreground">Fractional ownership</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Main Content Tabs */}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Holdings</TabsTrigger>
@@ -192,7 +189,7 @@ export default function BuyerDashboard() {
               <TabsTrigger value="next-of-kin">Next of Kin</TabsTrigger>
             </TabsList>
 
-            {/* Holdings Tab */}
+
             <TabsContent value="overview" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -247,7 +244,7 @@ export default function BuyerDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Marketplace Tab */}
+
             <TabsContent value="marketplace" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -317,7 +314,7 @@ export default function BuyerDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Resell Tab */}
+
             <TabsContent value="resell" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -356,7 +353,7 @@ export default function BuyerDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Next of Kin Tab */}
+
             <TabsContent value="next-of-kin" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -434,7 +431,7 @@ export default function BuyerDashboard() {
           </Tabs>
         </div>
 
-        {/* AI Chatbot */}
+
         <AIChatbot userRole="buyer" />
 
         <InvestmentModal

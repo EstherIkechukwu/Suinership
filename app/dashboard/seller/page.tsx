@@ -34,7 +34,6 @@ export default function SellerDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [showListingForm, setShowListingForm] = useState(false)
 
-  // Mock data - in production this would come from API
   const sellerData = {
     totalListings: 12,
     activeListings: 8,
@@ -138,7 +137,7 @@ export default function SellerDashboard() {
     <ProtectedRoute allowedRoles={["seller"]}>
       <DashboardLayout userRole="seller">
         <div className="space-y-8">
-          {/* Seller Overview */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -192,7 +191,7 @@ export default function SellerDashboard() {
             </Card>
           </div>
 
-          {/* Main Content Tabs */}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex items-center justify-between">
               <TabsList className="grid w-full max-w-md grid-cols-3">
@@ -206,7 +205,7 @@ export default function SellerDashboard() {
               </Button>
             </div>
 
-            {/* My Listings Tab */}
+
             <TabsContent value="overview" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -307,7 +306,7 @@ export default function SellerDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Analytics Tab */}
+
             <TabsContent value="analytics" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <Card>
@@ -397,7 +396,6 @@ export default function SellerDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Documents Tab */}
             <TabsContent value="documents" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -450,7 +448,7 @@ export default function SellerDashboard() {
             </TabsContent>
           </Tabs>
 
-          {/* Property Listing Form Modal */}
+
           {showListingForm && (
             <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -578,7 +576,7 @@ export default function SellerDashboard() {
           )}
         </div>
 
-        {/* AI Chatbot */}
+
         <AIChatbot userRole="seller" />
       </DashboardLayout>
     </ProtectedRoute>

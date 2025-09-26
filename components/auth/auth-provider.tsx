@@ -27,7 +27,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const authService = AuthService.getInstance()
 
   useEffect(() => {
-    // Check for existing session
     const currentUser = authService.getCurrentUser()
     setUser(currentUser)
     setIsLoading(false)
@@ -92,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         signIn,
         signInAdmin,
-        signInWithZkLogin, // Added to context
+        signInWithZkLogin,
         signOut,
       }}
     >

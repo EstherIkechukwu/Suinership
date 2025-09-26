@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { PaymentModal } from "@/components/ui/payment-modal" // Added payment modal import
+import { PaymentModal } from "@/components/ui/payment-modal"
 import {
   Wallet,
   ArrowUpRight,
@@ -32,22 +32,22 @@ export default function WalletPage() {
   const [selectedBank, setSelectedBank] = useState("")
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
 
-  // Mock wallet data - in production this would come from API
+
   const [walletData, setWalletData] = useState({
-    usdcBalance: 15750.5,
-    nairaBalance: 0, // We don't store Naira, only USDC
+    usdcBalance: 15750,
+    nairaBalance: 0,
     walletAddress: user?.walletAddress || "0x1234...5678",
-    totalDeposited: 50000.0,
-    totalWithdrawn: 12500.0,
-    totalInvested: 22000.0,
+    totalDeposited: 50000,
+    totalWithdrawn: 12500,
+    totalInvested: 22000,
   })
 
-  // Mock transaction history
+
   const transactions = [
     {
       id: 1,
       type: "deposit" as const,
-      amount: 5000.0,
+      amount: 5000,
       currency: "USDC",
       status: "completed" as const,
       date: "2024-12-15T10:30:00Z",
@@ -57,7 +57,7 @@ export default function WalletPage() {
     {
       id: 2,
       type: "investment" as const,
-      amount: 2500.0,
+      amount: 2500,
       currency: "USDC",
       status: "completed" as const,
       date: "2024-12-14T15:45:00Z",
@@ -67,7 +67,7 @@ export default function WalletPage() {
     {
       id: 3,
       type: "withdrawal" as const,
-      amount: 1000.0,
+      amount: 1000,
       currency: "USDC",
       status: "pending" as const,
       date: "2024-12-13T09:15:00Z",
@@ -77,7 +77,7 @@ export default function WalletPage() {
     {
       id: 4,
       type: "dividend" as const,
-      amount: 125.5,
+      amount: 125,
       currency: "USDC",
       status: "completed" as const,
       date: "2024-12-12T12:00:00Z",
@@ -88,7 +88,7 @@ export default function WalletPage() {
 
   const formatCurrency = (amount: number, currency = "USDC") => {
     if (currency === "USDC") {
-      return `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC`
+      return `${amount.toLocaleString("en-US", { minimumFractionDigits: 0  })} USDC`
     }
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -139,7 +139,7 @@ export default function WalletPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
-    // In production, show a toast notification
+
   }
 
   const handleDepositSuccess = (usdcAmount: number) => {
@@ -148,14 +148,14 @@ export default function WalletPage() {
       usdcBalance: prev.usdcBalance + usdcAmount,
       totalDeposited: prev.totalDeposited + usdcAmount,
     }))
-    // In production, this would also add a transaction to the history
+
   }
 
   return (
     <ProtectedRoute allowedRoles={["buyer"]}>
       <DashboardLayout userRole="buyer">
         <div className="space-y-8">
-          {/* Wallet Overview */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -163,7 +163,7 @@ export default function WalletPage() {
                 <Wallet className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.usdcBalance)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.usdcBalance)}</div>
                 <p className="text-xs text-muted-foreground">Available for investment</p>
               </CardContent>
             </Card>
@@ -174,7 +174,7 @@ export default function WalletPage() {
                 <ArrowDownLeft className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.totalDeposited)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.totalDeposited)}</div>
                 <p className="text-xs text-muted-foreground">Lifetime deposits</p>
               </CardContent>
             </Card>
@@ -185,7 +185,7 @@ export default function WalletPage() {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.totalInvested)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.totalInvested)}</div>
                 <p className="text-xs text-muted-foreground">In properties</p>
               </CardContent>
             </Card>
@@ -196,13 +196,13 @@ export default function WalletPage() {
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.totalWithdrawn)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.totalWithdrawn)}</div>
                 <p className="text-xs text-muted-foreground">Lifetime withdrawals</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Wallet Address */}
+
           <Card>
             <CardHeader>
               <CardTitle>Wallet Address</CardTitle>
@@ -221,7 +221,7 @@ export default function WalletPage() {
             </CardContent>
           </Card>
 
-          {/* Main Content Tabs */}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview">Transactions</TabsTrigger>
@@ -229,7 +229,7 @@ export default function WalletPage() {
               <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
             </TabsList>
 
-            {/* Transaction History */}
+
             <TabsContent value="overview" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -266,7 +266,7 @@ export default function WalletPage() {
               </Card>
             </TabsContent>
 
-            {/* Deposit Tab */}
+
             <TabsContent value="deposit" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -328,7 +328,6 @@ export default function WalletPage() {
               </Card>
             </TabsContent>
 
-            {/* Withdraw Tab */}
             <TabsContent value="withdraw" className="space-y-6">
               <Card>
                 <CardHeader>

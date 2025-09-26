@@ -30,7 +30,7 @@ import {
 export default function LawFirmDashboard() {
   const [activeTab, setActiveTab] = useState("cases")
 
-  // Mock data - in production this would come from API
+
   const lawFirmData = {
     activeCases: 34,
     pendingReviews: 12,
@@ -191,7 +191,7 @@ export default function LawFirmDashboard() {
             </Card>
           </div>
 
-          {/* Main Content Tabs */}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="cases">Legal Cases</TabsTrigger>
@@ -200,7 +200,7 @@ export default function LawFirmDashboard() {
               <TabsTrigger value="reports">Reports</TabsTrigger>
             </TabsList>
 
-            {/* Legal Cases Tab */}
+
             <TabsContent value="cases" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -265,7 +265,7 @@ export default function LawFirmDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Document Review Tab */}
+
             <TabsContent value="documents" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -318,7 +318,7 @@ export default function LawFirmDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Compliance Tab */}
+
             <TabsContent value="compliance" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <Card>
@@ -422,7 +422,7 @@ export default function LawFirmDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Reports Tab */}
+
             <TabsContent value="reports" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <Card>
@@ -506,7 +506,7 @@ export default function LawFirmDashboard() {
           </Tabs>
         </div>
 
-        {/* AI Chatbot */}
+
         <AIChatbot userRole="law_firm" />
       </DashboardLayout>
     </ProtectedRoute>

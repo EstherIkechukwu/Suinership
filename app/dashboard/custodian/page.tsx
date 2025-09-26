@@ -29,7 +29,7 @@ import {
 export default function CustodianDashboard() {
   const [activeTab, setActiveTab] = useState("assets")
 
-  // Mock data - in production this would come from API
+
   const custodianData = {
     totalAssetsUnderCustody: 15600000000,
     numberOfProperties: 234,
@@ -136,7 +136,7 @@ export default function CustodianDashboard() {
     <ProtectedRoute allowedRoles={["custodian"]}>
       <DashboardLayout userRole="custodian">
         <div className="space-y-8">
-          {/* Custodian Overview */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -144,7 +144,7 @@ export default function CustodianDashboard() {
                 <Vault className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(custodianData.totalAssetsUnderCustody)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(custodianData.totalAssetsUnderCustody)}</div>
                 <p className="text-xs text-muted-foreground">
                   <span className="text-accent flex items-center">
                     <ArrowUpRight className="h-3 w-3 mr-1" />
@@ -160,7 +160,7 @@ export default function CustodianDashboard() {
                 <FileText className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{custodianData.numberOfProperties}</div>
+                <div className="text-1.8xl font-bold">{custodianData.numberOfProperties}</div>
                 <p className="text-xs text-muted-foreground">Across {custodianData.activeClients} clients</p>
               </CardContent>
             </Card>
@@ -171,7 +171,7 @@ export default function CustodianDashboard() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(custodianData.monthlyFees)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(custodianData.monthlyFees)}</div>
                 <p className="text-xs text-muted-foreground">
                   <span className="text-accent">+5.3% from last month</span>
                 </p>
@@ -184,13 +184,12 @@ export default function CustodianDashboard() {
                 <Shield className="h-4 w-4 text-accent" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-accent">{custodianData.securityScore}%</div>
+                <div className="text-1.8xl font-bold text-accent">{custodianData.securityScore}%</div>
                 <p className="text-xs text-muted-foreground">Excellent security rating</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Main Content Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="assets">Custody Assets</TabsTrigger>
@@ -199,7 +198,7 @@ export default function CustodianDashboard() {
               <TabsTrigger value="reports">Reports</TabsTrigger>
             </TabsList>
 
-            {/* Custody Assets Tab */}
+
             <TabsContent value="assets" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -286,7 +285,7 @@ export default function CustodianDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Security & Audits Tab */}
+
             <TabsContent value="security" className="space-y-6">
               <div className="grid md:grid-cols-3 gap-6">
                 <Card>
@@ -400,7 +399,7 @@ export default function CustodianDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Compliance Tab */}
+
             <TabsContent value="compliance" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <Card>
@@ -516,7 +515,7 @@ export default function CustodianDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Reports Tab */}
+
             <TabsContent value="reports" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <Card>
@@ -600,7 +599,7 @@ export default function CustodianDashboard() {
           </Tabs>
         </div>
 
-        {/* AI Chatbot */}
+
         <AIChatbot userRole="custodian" />
       </DashboardLayout>
     </ProtectedRoute>

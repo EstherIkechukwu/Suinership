@@ -20,21 +20,20 @@ export default function SellerWalletPage() {
   const [withdrawAmount, setWithdrawAmount] = useState("")
   const [selectedBank, setSelectedBank] = useState("")
 
-  // Mock wallet data for seller
+
   const walletData = {
-    usdcBalance: 45250.75,
+    usdcBalance: 45250,
     walletAddress: user?.walletAddress || "0x1234...5678",
-    totalDeposited: 25000.0,
-    totalWithdrawn: 30000.0,
-    totalEarned: 50250.75, // From property sales
+    totalDeposited: 25000,
+    totalWithdrawn: 30000,
+    totalEarned: 50250,
   }
 
-  // Mock transaction history for seller
   const transactions = [
     {
       id: 1,
       type: "sale" as const,
-      amount: 15000.0,
+      amount: 15000,
       currency: "USDC",
       status: "completed" as const,
       date: "2024-12-15T10:30:00Z",
@@ -44,7 +43,7 @@ export default function SellerWalletPage() {
     {
       id: 2,
       type: "withdrawal" as const,
-      amount: 10000.0,
+      amount: 10000,
       currency: "USDC",
       status: "completed" as const,
       date: "2024-12-14T15:45:00Z",
@@ -54,7 +53,7 @@ export default function SellerWalletPage() {
     {
       id: 3,
       type: "deposit" as const,
-      amount: 5000.0,
+      amount: 5000,
       currency: "USDC",
       status: "completed" as const,
       date: "2024-12-13T09:15:00Z",
@@ -65,7 +64,7 @@ export default function SellerWalletPage() {
 
   const formatCurrency = (amount: number, currency = "USDC") => {
     if (currency === "USDC") {
-      return `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC`
+      return `${amount.toLocaleString("en-US", { minimumFractionDigits: 0})} USDC`
     }
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -120,7 +119,7 @@ export default function SellerWalletPage() {
     <ProtectedRoute allowedRoles={["seller"]}>
       <DashboardLayout userRole="seller">
         <div className="space-y-8">
-          {/* Wallet Overview */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -128,7 +127,7 @@ export default function SellerWalletPage() {
                 <Wallet className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.usdcBalance)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.usdcBalance)}</div>
                 <p className="text-xs text-muted-foreground">Available for withdrawal</p>
               </CardContent>
             </Card>
@@ -139,7 +138,7 @@ export default function SellerWalletPage() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.totalEarned)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.totalEarned)}</div>
                 <p className="text-xs text-muted-foreground">From property sales</p>
               </CardContent>
             </Card>
@@ -150,7 +149,7 @@ export default function SellerWalletPage() {
                 <ArrowDownLeft className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.totalDeposited)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.totalDeposited)}</div>
                 <p className="text-xs text-muted-foreground">Lifetime deposits</p>
               </CardContent>
             </Card>
@@ -161,13 +160,13 @@ export default function SellerWalletPage() {
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(walletData.totalWithdrawn)}</div>
+                <div className="text-1.8xl font-bold">{formatCurrency(walletData.totalWithdrawn)}</div>
                 <p className="text-xs text-muted-foreground">Lifetime withdrawals</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Wallet Address */}
+
           <Card>
             <CardHeader>
               <CardTitle>Wallet Address</CardTitle>
@@ -186,7 +185,7 @@ export default function SellerWalletPage() {
             </CardContent>
           </Card>
 
-          {/* Main Content Tabs */}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview">Transactions</TabsTrigger>
@@ -194,7 +193,7 @@ export default function SellerWalletPage() {
               <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
             </TabsList>
 
-            {/* Transaction History */}
+
             <TabsContent value="overview" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -231,7 +230,7 @@ export default function SellerWalletPage() {
               </Card>
             </TabsContent>
 
-            {/* Deposit Tab */}
+
             <TabsContent value="deposit" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -282,7 +281,7 @@ export default function SellerWalletPage() {
               </Card>
             </TabsContent>
 
-            {/* Withdraw Tab */}
+
             <TabsContent value="withdraw" className="space-y-6">
               <Card>
                 <CardHeader>

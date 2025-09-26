@@ -12,6 +12,7 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { Home, Users, Building, Shield, ArrowLeft, Copy, Check, Chrome, Wallet } from "lucide-react"
 import { type Language, getTranslation } from "@/lib/i18n"
 import Link from "next/link"
+import Image from 'next/image'
 
 type AuthStep = "role-selection" | "sign-up" | "sign-in" | "wallet-display"
 type UserRole = "buyer" | "seller"
@@ -159,12 +160,17 @@ export default function AuthPage() {
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
-                <Home className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <span className="text-2xl font-bold text-foreground">Suinership</span>
+               <Image
+                src="/Suinership_logo_white.png"
+                alt="Suinership"
+                width={100}
+                height={100}
+                className="rounded-lg"
+              />
+
             </div>
-            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+
+            <h1 className="text-3xl lg:text-2xl font-bold text-foreground mb-3">
               {currentStep === "role-selection"
                 ? "Choose Your Role"
                 : currentStep === "sign-up"
@@ -173,7 +179,7 @@ export default function AuthPage() {
                     ? "Welcome Back"
                     : "Your Wallet is Ready"}
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-base text-muted-foreground mb-0.5">
               {currentStep === "role-selection"
                 ? "Select how you want to use Suinership"
                 : currentStep === "sign-up"

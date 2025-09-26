@@ -23,11 +23,13 @@ import {
   X,
   Wallet,
   ImageIcon,
+    LogOut
 } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import {usePathname, useRouter} from "next/navigation"
 import { cn } from "@/lib/utils"
 import type { UserRole } from "@/lib/auth"
+import Image from 'next/image'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -36,53 +38,57 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
   const pathname = usePathname()
+    const router = useRouter()
 
   const navigationItems = {
     buyer: [
       { name: "Dashboard", href: "/dashboard/buyer", icon: Home },
-      { name: "Portfolio", href: "/dashboard/buyer/portfolio", icon: PieChart },
-      { name: "Marketplace", href: "/dashboard/buyer/marketplace", icon: ShoppingCart },
-      { name: "Wallet", href: "/dashboard/buyer/wallet", icon: Wallet }, // Added Wallet page
-      { name: "NFT Collection", href: "/dashboard/buyer/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
-      { name: "Next of Kin", href: "/dashboard/buyer/next-of-kin", icon: Users },
+      // { name: "Marketplace", href: "/dashboard/buyer/marketplace", icon: ShoppingCart },
+      { name: "Wallet", href: "/dashboard/buyer/wallet", icon: Wallet },
+      { name: "NFT Collection", href: "/dashboard/buyer/nft-collection", icon: ImageIcon },
       { name: "Settings", href: "/dashboard/buyer/settings", icon: Settings },
+        {name: "LogOut", href: "/logout", icon: LogOut},
     ],
     seller: [
       { name: "Dashboard", href: "/dashboard/seller", icon: Home },
       { name: "My Properties", href: "/dashboard/seller/properties", icon: Building },
       { name: "List Property", href: "/dashboard/seller/list", icon: ShoppingCart },
       { name: "Analytics", href: "/dashboard/seller/analytics", icon: PieChart },
-      { name: "Wallet", href: "/dashboard/seller/wallet", icon: Wallet }, // Added Wallet page
-      { name: "NFT Collection", href: "/dashboard/seller/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
+      { name: "Wallet", href: "/dashboard/seller/wallet", icon: Wallet },
+      { name: "NFT Collection", href: "/dashboard/seller/nft-collection", icon: ImageIcon },
       { name: "Settings", href: "/dashboard/seller/settings", icon: Settings },
+        {name: "LogOut", href: "/logout", icon: LogOut},
     ],
     admin: [
       { name: "Dashboard", href: "/dashboard/admin", icon: Home },
       { name: "Law Firms", href: "/dashboard/admin/law-firms", icon: Scale },
       { name: "Custodians", href: "/dashboard/admin/custodians", icon: Briefcase },
       { name: "Oversight", href: "/dashboard/admin/oversight", icon: Shield },
-      { name: "Wallet", href: "/dashboard/admin/wallet", icon: Wallet }, // Added Wallet page
-      { name: "NFT Collection", href: "/dashboard/admin/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
+      { name: "Wallet", href: "/dashboard/admin/wallet", icon: Wallet },
+      { name: "NFT Collection", href: "/dashboard/admin/nft-collection", icon: ImageIcon },
       { name: "Settings", href: "/dashboard/admin/settings", icon: Settings },
+        {name: "LogOut", href: "/logout", icon: LogOut},
     ],
     "law-firm": [
       { name: "Dashboard", href: "/dashboard/law-firm", icon: Home },
       { name: "Verification Queue", href: "/dashboard/law-firm/queue", icon: Scale },
       { name: "Certificates", href: "/dashboard/law-firm/certificates", icon: Shield },
-      { name: "Wallet", href: "/dashboard/law-firm/wallet", icon: Wallet }, // Added Wallet page
-      { name: "NFT Collection", href: "/dashboard/law-firm/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
+      { name: "Wallet", href: "/dashboard/law-firm/wallet", icon: Wallet },
+      { name: "NFT Collection", href: "/dashboard/law-firm/nft-collection", icon: ImageIcon },
       { name: "Settings", href: "/dashboard/law-firm/settings", icon: Settings },
+        {name: "LogOut", href: "/logout", icon: LogOut},
     ],
     custodian: [
       { name: "Dashboard", href: "/dashboard/custodian", icon: Home },
       { name: "Properties", href: "/dashboard/custodian/properties", icon: Building },
       { name: "Analytics", href: "/dashboard/custodian/analytics", icon: PieChart },
       { name: "Reports", href: "/dashboard/custodian/reports", icon: Shield },
-      { name: "Wallet", href: "/dashboard/custodian/wallet", icon: Wallet }, // Added Wallet page
-      { name: "NFT Collection", href: "/dashboard/custodian/nft-collection", icon: ImageIcon }, // Updated Image to ImageIcon
+      { name: "Wallet", href: "/dashboard/custodian/wallet", icon: Wallet },
+      { name: "NFT Collection", href: "/dashboard/custodian/nft-collection", icon: ImageIcon },
       { name: "Settings", href: "/dashboard/custodian/settings", icon: Settings },
+        {name: "LogOut", href: "/signOut", icon: LogOut},
     ],
   }
 
@@ -99,6 +105,8 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
     return roleNames[role] || "Dashboard"
   }
 
+
+
   const getChatbotRole = (role: UserRole) => {
     if (role === "law-firm") return "law-firm"
     return role
@@ -106,14 +114,12 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setSidebarOpen(false)}>
           <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" />
         </div>
       )}
 
-      {/* Sidebar */}
       <div
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-200 ease-in-out lg:translate-x-0",
@@ -121,20 +127,26 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
         )}
       >
         <div className="flex h-full flex-col">
-          {/* Sidebar header */}
+
           <div className="flex items-center justify-between p-6 border-b border-border">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Home className="h-5 w-5 text-primary-foreground" />
+              <div>
+                  <Image
+                src="/Suinership_logo_white.png"
+                alt="Suinership"
+                width={100}
+                height={100}
+                className="rounded-lg"
+              />
               </div>
-              <span className="text-lg font-bold text-foreground">Suinership</span>
+
             </div>
             <Button variant="ghost" size="sm" className="lg:hidden" onClick={() => setSidebarOpen(false)}>
               <X className="h-5 w-5" />
             </Button>
           </div>
 
-          {/* User info */}
+
           <div className="p-6 border-b border-border">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
@@ -147,8 +159,7 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 p-6 space-y-2">
+        <nav className="flex-1 p-6 space-y-2">
             {navigation.map((item) => {
               const isActive = pathname === item.href
               return (
@@ -161,7 +172,17 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted",
                   )}
-                  onClick={() => setSidebarOpen(false)}
+                  onClick={async (e) => {
+                    setSidebarOpen(false)
+                    if (item.name === "LogOut") {
+                      e.preventDefault()
+                      try {
+                        await signOut()
+                      } finally {
+                        router.push("/")
+                      }
+                    }
+                  }}
                 >
                   <item.icon className="h-5 w-5" />
                   <span>{item.name}</span>
@@ -169,12 +190,13 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
               )
             })}
           </nav>
+
         </div>
       </div>
 
-      {/* Main content */}
+
       <div className="lg:pl-64">
-        {/* Top header */}
+
         <header className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center space-x-4">
@@ -191,7 +213,7 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
           </div>
         </header>
 
-        {/* Page content */}
+
         <main className="p-6">{children}</main>
       </div>
 

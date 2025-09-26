@@ -35,7 +35,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [searchTerm, setSearchTerm] = useState("")
 
-  // Mock data - in production this would come from API
+
   const adminData = {
     totalUsers: 2847,
     activeListings: 156,
@@ -175,7 +175,7 @@ export default function AdminDashboard() {
     <ProtectedRoute allowedRoles={["admin"]}>
       <DashboardLayout userRole="admin">
         <div className="space-y-8">
-          {/* Admin Overview */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
             </Card>
           </div>
 
-          {/* Main Content Tabs */}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Verifications</TabsTrigger>
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
-            {/* Verifications Tab */}
+
             <TabsContent value="overview" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -304,7 +304,7 @@ export default function AdminDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Users Tab */}
+
             <TabsContent value="users" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -379,7 +379,7 @@ export default function AdminDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Transactions Tab */}
+
             <TabsContent value="transactions" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -427,7 +427,7 @@ export default function AdminDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Analytics Tab */}
+
             <TabsContent value="analytics" className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <Card>
@@ -510,7 +510,7 @@ export default function AdminDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Settings Tab */}
+
             <TabsContent value="settings" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -562,7 +562,6 @@ export default function AdminDashboard() {
           </Tabs>
         </div>
 
-        {/* AI Chatbot */}
         <AIChatbot userRole="admin" />
       </DashboardLayout>
     </ProtectedRoute>
