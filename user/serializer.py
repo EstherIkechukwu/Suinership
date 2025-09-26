@@ -1,12 +1,16 @@
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as PasswordValidationError
+from google.auth.transport import requests
+from google.oauth2 import id_token
 from rest_framework import serializers
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from service import settings
 from .models import User
+
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -37,6 +41,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class GoogleAuthURLSerializer(serializers.Serializer):
+    auth_url = serializers.CharField(read_only=True)
+
+class GoogleAuthCallbackSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    google_id = serializers.CharField()
+    full_name = serializers.CharField()
+    access_token = serializers.CharField()
 
 class LoginTokenSerializer(TokenObtainPairSerializer):
      username_field = User.EMAIL_FIELD

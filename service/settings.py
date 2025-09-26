@@ -30,6 +30,21 @@ if local_env.exists():
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-for-local')
 
+GOOGLE_CLIENT_ID= os.getenv('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET= os.getenv('GOOGLE_CLIENT_SECRET')
+GOOGLE_REDIRECT_URI= os.getenv('GOOGLE_REDIRECT_URI')
+GOOGLE_LOGIN_REDIRECT_URI= os.getenv('GOOGLE_LOGIN_REDIRECT_URI')
+
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')     # your Gmail
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# the one you just generated
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 

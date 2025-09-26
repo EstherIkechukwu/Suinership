@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import os
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -9,7 +10,12 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("The Email must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+        if not getattr(user, "user_salt", None):
+            user.user_salt = os.urandom(16).hex()
         user.save(using=self._db)
         return user
 
@@ -20,6 +26,8 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser must have is_staff=True.")
         if not extra_fields.get("is_superuser"):
             raise ValueError("Superuser must have is_superuser=True.")
+        if not password:
+            raise ValueError("Superusers must have a password.")
         return self.create_user(email, password, **extra_fields)
 
 
@@ -27,6 +35,9 @@ class User(AbstractUser):
      username = None
      full_name = models.CharField( max_length=255)
      email = models.EmailField( unique=True, blank=True, null=True)
+     google_id = models.CharField(max_length=255, blank=True, null=True, unique=True)
+     user_salt = models.CharField(max_length=64, unique=True, blank=True, null=True)
+
 
      USERNAME_FIELD = "email"
      REQUIRED_FIELDS = []

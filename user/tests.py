@@ -13,10 +13,11 @@ class RegistrationTest(TestCase):
         self.client = Client()
         self.url = reverse('register')
         self.user_data = {
-            "full_name": "Test User",
-            "email": "testuser@example.com",
-            "password": "TestPassword123"
-        }
+    "email": "test1@example.com",
+    "full_name": "John Doe",
+    "password": "StrongPass123!"
+}
+
         self.user_weak_password_data = {
             "full_name": "Test User",
             "email": "testWeakPassword@email.com",
