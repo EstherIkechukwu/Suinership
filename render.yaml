@@ -7,39 +7,20 @@ services:
       dockerfile: Dockerfile
     envVars:
       - key: DATABASE_URL
-        value: postgresql://suinership_user:YOUR_PASSWORD@HOST:PORT/suinership
+        fromService:
+          name: Suinership_db
+          type: postgres
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
         value: suinership-backend.onrender.com
-      - key: REDIS_HOST
-        value: redis
-      - key: REDIS_PORT
-        value: "6379"
-      - key: REDIS_PASSWORD
-        value: Omolade
-      - key: GOOGLE_CLIENT_ID
-        value: 1099188291230-7r2aluvlcnf3n9euo2hb4ol83447v8gm.apps.googleusercontent.com
-      - key: GOOGLE_CLIENT_SECRET
-        value: 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
-      - key: GOOGLE_REDIRECT_URI
-        value: https://suinership-backend.onrender.com/api/user/auth/google/callback/
-      - key: GOOGLE_LOGIN_REDIRECT_URI
-        value: https://suinership-backend.onrender.com/api/user/auth/google/login/callback/
-      - key: EMAIL_BACKEND
-        value: django.core.mail.backends.smtp.EmailBackend
-      - key: EMAIL_HOST
-        value: smtp.sendgrid.net
-      - key: EMAIL_PORT
-        value: "587"
-      - key: EMAIL_USE_TLS
-        value: "True"
-      - key: EMAIL_HOST_USER
-        value: apikey
-      - key: EMAIL_HOST_PASSWORD
-        value: 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
-      - key: DEFAULT_FROM_EMAIL
-        value: Suinership<okakafavour81@gmail.com>
     numInstances: 1
+
+databases:
+  - name: Suinership_db
+    plan: free
+    databaseName: suinership
+    user: Suinership
