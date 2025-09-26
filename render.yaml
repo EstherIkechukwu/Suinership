@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: Bill-stattion
+    name: Suinership-backend
     env: docker
     plan: free
     docker:
@@ -8,7 +8,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromService:
-          name: Bill-stattion-db
+          name: Suinership_db
           type: postgres
           property: connectionString
       - key: SECRET_KEY
@@ -16,11 +16,11 @@ services:
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
-        value: bill-stattion.onrender.com
+        value: https://suinership-backend.onrender.com
     numInstances: 1
 
 databases:
-  - name: Bill-stattion-db
+  - name: Suinership_db
     plan: free
-    databaseName: billstation
-    user: billstation
+    databaseName: Suinership
+    user: Suinership

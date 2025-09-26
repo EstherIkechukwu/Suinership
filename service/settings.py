@@ -54,7 +54,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,bill-stattion.onrender.com,bill-stattion-production.up.railway.app").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,suinership-backend.onrender.com").split(",")
 
 
 # Application definition
