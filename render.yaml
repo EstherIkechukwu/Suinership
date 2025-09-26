@@ -19,8 +19,3 @@ services:
         value: suinership.onrender.com
     numInstances: 1
 
-databases:
-  - name: Suinership_db
-    plan: free
-    databaseName: suinership
-    user: suinership_user
