@@ -36,7 +36,7 @@ class User(AbstractUser):
      full_name = models.CharField( max_length=255)
      email = models.EmailField( unique=True, blank=True, null=True)
      google_id = models.CharField(max_length=255, blank=True, null=True, unique=True)
-     user_salt = models.CharField(max_length=64, unique=True, blank=True, null=True)
+     user_salt = models.CharField(max_length=255, unique=True, blank=True, null=True)
 
 
      USERNAME_FIELD = "email"
