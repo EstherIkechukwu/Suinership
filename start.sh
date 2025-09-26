@@ -1,13 +1,17 @@
 #!/bin/bash
+
+
+
 set -e
+
 
 echo "Waiting for environment to be ready..."
 sleep 5
 
-echo "Dropping database..."
-python manage.py flush --noinput || echo "Flush failed, continuing..."
+
 
 echo "Running migrations..."
+
 python manage.py migrate --noinput || echo "Migrations failed, but continuing startup..."
 
 echo "Starting server..."
