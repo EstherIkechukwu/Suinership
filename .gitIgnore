@@ -1,0 +1,6 @@
+.env
+docker-compose.yml
+.env.local
+db.sqlite3
+__pycache__/
+*.pyc
