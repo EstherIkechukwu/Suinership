@@ -33,6 +33,8 @@ import {
 export default function SellerDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [showListingForm, setShowListingForm] = useState(false)
+     // const [showListingForm, setShowListingForm] = useState(false)
+    const [showSuccessCard, setShowSuccessCard] = useState(false)
 
   const sellerData = {
     totalListings: 12,
@@ -136,7 +138,7 @@ export default function SellerDashboard() {
   return (
     <ProtectedRoute allowedRoles={["seller"]}>
       <DashboardLayout userRole="seller">
-        <div className="space-y-8">
+        <div className="space-y-8 ">
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
@@ -199,10 +201,33 @@ export default function SellerDashboard() {
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 <TabsTrigger value="documents">Documents</TabsTrigger>
               </TabsList>
-              <Button onClick={() => setShowListingForm(true)} className="flex items-center">
-                <Plus className="h-4 w-4 mr-2" />
-                List New Property
+              <Button
+                onClick={() => {
+                  setShowListingForm(false)
+                  // Optionally, trigger a success state here
+                  setShowSuccessCard(true)
+                }}
+              >
+                Submit for Review
               </Button>
+               {showSuccessCard && (
+                <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                  <Card className="w-full max-w-md text-center">
+                    <CardHeader>
+                      <CheckCircle className="mx-auto h-12 w-12 text-success mb-4" />
+                      <CardTitle>Property Listed Successfully!</CardTitle>
+                      <CardDescription>
+                        Your property has been submitted for review. You will be notified once it is approved.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Button className="mt-4" onClick={() => setShowSuccessCard(false)}>
+                        Close
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
             </div>
 
 

@@ -16,7 +16,6 @@ export default function SellerNFTCollectionPage() {
   const [sortBy, setSortBy] = useState("newest")
   const [filterBy, setFilterBy] = useState("all")
 
-
   const nftCollection = [
     {
       id: 1,
@@ -259,7 +258,7 @@ export default function SellerNFTCollectionPage() {
                     <Card key={nft.id} className="hover:shadow-lg transition-shadow">
                       <div className="relative">
                         <img
-                          src={nft.nftImage || "/placeholder.svg?height=200&width=300&query=Property NFT collection"}
+                          src={"/house nft 3.png"}
                           alt={`${nft.propertyName} NFT`}
                           className="w-full h-48 object-cover rounded-t-lg"
                         />

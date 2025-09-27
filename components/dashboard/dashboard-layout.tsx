@@ -48,7 +48,7 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
       // { name: "Marketplace", href: "/dashboard/buyer/marketplace", icon: ShoppingCart },
       { name: "Wallet", href: "/dashboard/buyer/wallet", icon: Wallet },
       { name: "NFT Collection", href: "/dashboard/buyer/nft-collection", icon: ImageIcon },
-      { name: "Settings", href: "/dashboard/buyer/settings", icon: Settings },
+      // { name: "Settings", href: "/dashboard/buyer/settings", icon: Settings },
         {name: "LogOut", href: "/logout", icon: LogOut},
     ],
     seller: [
