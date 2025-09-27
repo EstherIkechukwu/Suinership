@@ -259,7 +259,7 @@ export default function SellerNFTCollectionPage() {
                       <div className="relative">
                         <img
                           src={"/house nft 3.png"}
-                          alt={`${nft.propertyName} NFT`}
+                          // alt={`${nft.propertyName} NFT`}
                           className="w-full h-48 object-cover rounded-t-lg"
                         />
                         <div className="absolute top-4 left-4">{getStatusBadge(nft.status)}</div>
