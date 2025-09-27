@@ -1,4 +1,3 @@
-// src/suiCoreClient.ts
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { fromBase64 } from "@mysten/sui/utils";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
